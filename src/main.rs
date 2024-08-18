@@ -6,9 +6,14 @@ use mongodb::{
 
 use warp::Filter;
 
+mod routes;
 
-mod endpoints;
-
+fn combined_routes() -> impl Filter<Extract = impl warp::Reply, Error = warp.Rejection> + Clone{
+    routes::test::test_route()
+        //.or(endpoints::another::another_route())
+        //.or(endpoints::another::another_route())
+        //.or(endpoints::another::another_route())
+}
 
 #[tokio::main]
 async fn main() /*-> mongodb::error::Result<()> */ {
@@ -28,9 +33,7 @@ async fn main() /*-> mongodb::error::Result<()> */ {
     //println!("Found a movie:\n{:#?}", my_movie);
 
     // DEFINE ENDPOINTS
-    let test_route = endpoints::test::test_route();
-
-    let routes = test_route.with(warp::log("endpoints"));
+    let routes = combined_routes.with(warp::log("endpoints"));
     warp::serve(routes)
         .run(([127, 0, 0, 1], 8080))
         .await;
